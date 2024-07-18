@@ -1,0 +1,23 @@
+databases:
+  - name: my-database
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: my-drf-app
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn django_project.core.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: django_project.core.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: my-drf-app.onrender.com
+      - key: DATABASE_URL
+        value: postgresql://my_database_0jkb_user:oRsLKqo9HGQePCmmRgYGMXedUZWTBNpc@dpg-cq4jau5ds78s73cl6650-a:5432/my_database_0jkb
+      - key: PYTHONPATH
+        value: /opt/render/project/src/django_project
